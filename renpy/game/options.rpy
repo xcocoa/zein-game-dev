@@ -17,9 +17,6 @@ define config.default_transition = Dissolve(0.5)
 define config.default_in_transition = Dissolve(0.5)
 define config.default_out_transition = Dissolve(0.5)
 
-## 忽略未知属性
-define config.ignore_errors = False
-
 ## 自动保存
 define config.has_autosave = True
 define config.autosave_on_quit = True
@@ -31,9 +28,5 @@ define config.history_length = 250
 ## 快速保存/读取
 define config.quick_menu = True
 
-## 跳过已读文本
-define config.after_load_callbacks.append = SetVariable('skip_unseen', False)
-
 ## 移动端优化
 define config.touch_rollback = True
-define config.gl_resize_window = False
