@@ -1,0 +1,16 @@
+# Ren'Py 编译文件
+*.rpyc
+
+# 存档文件
+saves/
+
+# 日志文件
+log.txt
+errors.txt
+traceback.txt
+
+# 临时文件
+tmp/
+
+# macOS
+.DS_Store
