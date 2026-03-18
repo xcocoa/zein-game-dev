@@ -58,10 +58,10 @@ label world_select:
         "📷  林晓的周五下午 · 一个摄影学生的房间":
             jump world_linxiao
 
-        "📖  [未解锁] 来自陌生城市的流水账":
+        "📖  〔未解锁〕来自陌生城市的流水账":
             jump world_locked
 
-        "🌙  [未解锁] 失眠者的凌晨三点":
+        "🌙  〔未解锁〕失眠者的凌晨三点":
             jump world_locked
 
         "← 什么都不想看，离开":
