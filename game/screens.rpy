@@ -783,32 +783,7 @@ screen preferences():
                 ## Additional vboxes of type "radio_pref" or "check_pref" can be
                 ## added here, to add additional creator-defined preferences.
 
-#begin language_picker
-
-                vbox:
-                    style_prefix "radio"
-                    label _("Language")
-
-                    textbutton "English" text_font "DejaVuSans.ttf" action Language(None)
-                    textbutton "Česky" text_font "DejaVuSans.ttf" action Language("czech")
-                    textbutton "Dansk" text_font "DejaVuSans.ttf" action Language("danish")
-                    textbutton "Français" text_font "DejaVuSans.ttf" action Language("french")
-                    textbutton "Italiano" text_font "DejaVuSans.ttf" action Language("italian")
-                    textbutton "Bahasa Melayu" text_font "DejaVuSans.ttf" action Language("malay")
-                    textbutton "Русский" text_font "DejaVuSans.ttf" action Language("russian")
-
-                vbox:
-                    style_prefix "radio"
-                    label _(" ")
-
-                    textbutton "Español" text_font "DejaVuSans.ttf" action Language("spanish")
-                    textbutton "Українська" text_font "DejaVuSans.ttf" action Language("ukrainian")
-                    textbutton "日本語" text_font "SourceHanSansLite.ttf" action Language("japanese")
-                    textbutton "한국어" text_font "SourceHanSansLite.ttf" action Language("korean")
-                    textbutton "简体中文" text_font "SourceHanSansLite.ttf" action Language("schinese")
-                    textbutton "繁體中文" text_font "SourceHanSansLite.ttf" action Language("tchinese")
-
-#end language_picker
+## 语言选择器已移除（本游戏为纯中文，无需多语言切换）
 
             null height (4 * gui.pref_spacing)
 
