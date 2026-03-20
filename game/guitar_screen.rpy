@@ -1,52 +1,49 @@
 ## ============================================================
 ## 吉他指板交互界面
 ## guitar_screen.rpy
-##
-## 布局（1280×720）：
-##   上方：状态提示区（任务说明、当前反馈）
-##   中间：可点击指板（6弦×5品 + 空弦列）
-##   下方：扫弦按钮区 + 操作说明
 ## ============================================================
 
 ## ─────────────────────────────────────────────
-## 运行时变量（每次进入 screen 前重置）
+## 运行时变量
 ## ─────────────────────────────────────────────
-default fret_pressed = {}        ## {(string, fret): True} 当前按住的品格
-default last_played_note = ""    ## 最近一次弹奏的文字反馈
-default strum_result = ""        ## 扫弦后的结果文字
-default fret_feedback = ""       ## 点击品格后的小提示
-default guitar_screen_task = ""  ## 本次 screen 的任务描述（外部传入）
+default fret_pressed = {}
+default last_played_note = ""
+default strum_result = ""
+default fret_feedback = ""
+default guitar_screen_task = ""
 
-## 音符名称表：(弦号1-6, 品格0-5) → 音名
-## 弦序：1=最细高音弦(e), 6=最粗低音弦(E)
-## 品格0=空弦
+## 音符名称表：(弦号1-6, 品格0-5) → 音名（显示用）
 define GUITAR_NOTES = {
-    ## 第1弦 e
     (1,0):"e",  (1,1):"F",  (1,2):"F#", (1,3):"G",  (1,4):"G#", (1,5):"A",
-    ## 第2弦 B
     (2,0):"B",  (2,1):"C",  (2,2):"C#", (2,3):"D",  (2,4):"D#", (2,5):"E",
-    ## 第3弦 G
     (3,0):"G",  (3,1):"G#", (3,2):"A",  (3,3):"A#", (3,4):"B",  (3,5):"C",
-    ## 第4弦 D
     (4,0):"D",  (4,1):"D#", (4,2):"E",  (4,3):"F",  (4,4):"F#", (4,5):"G",
-    ## 第5弦 A
     (5,0):"A",  (5,1):"A#", (5,2):"B",  (5,3):"C",  (5,4):"C#", (5,5):"D",
-    ## 第6弦 E（低音）
     (6,0):"E",  (6,1):"F",  (6,2):"F#", (6,3):"G",  (6,4):"G#", (6,5):"A",
 }
 
-## 和弦定义：和弦名 → {弦号: 品格}（不在字典中的弦=不拨）
+## 指板音符 → 音效文件名（含八度）
+define FRET_SOUND_MAP = {
+    (1,0):"E4",  (1,1):"F4",   (1,2):"F#4", (1,3):"G4",  (1,4):"G#4", (1,5):"A4",
+    (2,0):"B3",  (2,1):"C4",   (2,2):"C#4", (2,3):"D4",  (2,4):"D#4", (2,5):"E4",
+    (3,0):"G3",  (3,1):"G#3",  (3,2):"A3",  (3,3):"A#3", (3,4):"B3",  (3,5):"C4",
+    (4,0):"D3",  (4,1):"D#3",  (4,2):"E3",  (4,3):"F3",  (4,4):"F#3", (4,5):"G3",
+    (5,0):"A2",  (5,1):"A#2",  (5,2):"B2",  (5,3):"C3",  (5,4):"C#3", (5,5):"D3",
+    (6,0):"E2",  (6,1):"F2",   (6,2):"F#2", (6,3):"G2",  (6,4):"G#2", (6,5):"A2",
+}
+
+## 和弦定义：和弦名 → {弦号: 品格}
 define CHORD_SHAPES = {
-    "C":  {1:0, 2:1, 3:0, 4:2, 5:3},          ## 不拨第6弦
+    "C":  {1:0, 2:1, 3:0, 4:2, 5:3},
     "G":  {1:3, 2:0, 3:0, 4:0, 5:2, 6:3},
-    "Am": {1:0, 2:1, 3:2, 4:2, 5:0},           ## 不拨第6弦
-    "F":  {1:1, 2:1, 3:2, 4:3, 5:3, 6:1},      ## 封闭和弦
+    "Am": {1:0, 2:1, 3:2, 4:2, 5:0},
+    "F":  {1:1, 2:1, 3:2, 4:3, 5:3, 6:1},
     "Em": {1:0, 2:0, 3:0, 4:2, 5:2, 6:0},
-    "Dm": {1:1, 2:3, 3:2, 4:0},                 ## 仅1-4弦
+    "Dm": {1:1, 2:3, 3:2, 4:0},
 }
 
 ## ─────────────────────────────────────────────
-## 样式定义
+## 样式
 ## ─────────────────────────────────────────────
 style fret_button:
     xysize (72, 52)
@@ -61,6 +58,22 @@ style fret_button_text:
     color "#c8a060"
     hover_color "#ffe097"
     selected_color "#fff0b0"
+    xalign 0.5
+    yalign 0.5
+
+## 目标品格高亮（绿色提示）
+style fret_button_target:
+    xysize (72, 52)
+    background "#1a3a1a"
+    hover_background "#2a5a2a"
+    selected_background "#3aaa3a"
+    padding (0, 0, 0, 0)
+
+style fret_button_target_text:
+    size 13
+    color "#88dd88"
+    hover_color "#aaffaa"
+    selected_color "#ccffcc"
     xalign 0.5
     yalign 0.5
 
@@ -109,39 +122,28 @@ style guitar_note_label:
     yalign 0.5
 
 ## ─────────────────────────────────────────────
-## 工具函数：判断当前按弦是否匹配指定和弦
+## 工具函数
 ## ─────────────────────────────────────────────
 init python:
     def check_chord_match(pressed, chord_name):
-        """
-        检查 pressed（{(string,fret): True}）是否与和弦定义一致。
-        返回 (bool, str)：是否匹配，以及反馈文字
-        """
         shape = CHORD_SHAPES.get(chord_name, {})
         if not shape:
             return False, "未知和弦"
-
         errors = []
         for string_num, required_fret in shape.items():
-            # 找到这根弦上按的品格（可能是0即空弦，或某品格）
-            pressed_fret = None
+            pressed_fret = 0
             for (s, f), v in pressed.items():
                 if s == string_num and v:
                     pressed_fret = f
                     break
-            if pressed_fret is None:
-                pressed_fret = 0  # 没按=空弦
-
             if pressed_fret != required_fret:
-                errors.append("第{}弦应按{}品".format(string_num, required_fret if required_fret > 0 else "空弦"))
-
+                errors.append("第{}弦".format(string_num))
         if not errors:
-            return True, "✓ {} 和弦，手型正确！".format(chord_name)
+            return True, "✓ {} 和弦正确！".format(chord_name)
         else:
-            return False, "差一点：" + "、".join(errors[:2])
+            return False, "还差：" + "、".join(errors[:3]) + " 没按对"
 
     def get_pressed_notes(pressed):
-        """获取当前按弦状态下的音名列表（按弦6→1顺序）"""
         notes = []
         for s in range(6, 0, -1):
             fret = 0
@@ -154,21 +156,16 @@ init python:
         return notes
 
     def toggle_fret(pressed_dict, string_num, fret_num):
-        """切换某品格的按压状态，同一弦上同时只能按一个品"""
         new_dict = dict(pressed_dict)
-        # 清除同一弦上的其他品格
         for (s, f) in list(new_dict.keys()):
             if s == string_num:
                 del new_dict[(s, f)]
-        # 如果原来就是这个位置，则松开（不写入=松开）
         key = (string_num, fret_num)
-        old_val = pressed_dict.get(key, False)
-        if not old_val:
+        if not pressed_dict.get(key, False):
             new_dict[key] = True
         return new_dict
 
     def apply_chord_shape(chord_name):
-        """直接应用整个和弦手型，返回新的 pressed 字典"""
         shape = CHORD_SHAPES.get(chord_name, {})
         new_dict = {}
         for string_num, fret_num in shape.items():
@@ -176,23 +173,34 @@ init python:
                 new_dict[(string_num, fret_num)] = True
         return new_dict
 
+    def get_fret_sound(string_num, fret_num):
+        """返回音效文件路径"""
+        note = FRET_SOUND_MAP.get((string_num, fret_num), "E4")
+        return "audio/note_{}.wav".format(note)
+
+    def is_target_fret(string_num, fret_num, chord_name):
+        """判断某个品格是否是目标和弦需要按的位置"""
+        if not chord_name:
+            return False
+        shape = CHORD_SHAPES.get(chord_name, {})
+        return shape.get(string_num, -1) == fret_num and fret_num > 0
+
+    def is_target_open(string_num, chord_name):
+        """判断某根弦是否是目标和弦的空弦位"""
+        if not chord_name:
+            return False
+        shape = CHORD_SHAPES.get(chord_name, {})
+        return shape.get(string_num, -1) == 0
+
 
 ## ─────────────────────────────────────────────
 ## 主 Screen：guitar_fretboard
-## 参数：
-##   task_text  — 顶部任务说明
-##   target_chord — 目标和弦名（""=自由弹奏模式）
-##   exit_label — 完成/退出后跳转的 label
 ## ─────────────────────────────────────────────
 screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="guitar_room_main"):
 
-    ## 防止点击穿透到对话层
     modal True
-
-    ## ── 背景遮罩 ──
     add "#000000cc"
 
-    ## ── 整体容器，垂直居中 ──
     vbox:
         xalign 0.5
         yalign 0.5
@@ -201,7 +209,7 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
         ## ── 任务说明 ──
         frame:
             xalign 0.5
-            xsize 780
+            xsize 820
             ysize 44
             background "#00000088"
             padding (12, 6, 12, 6)
@@ -210,13 +218,13 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
         ## ── 反馈区 ──
         frame:
             xalign 0.5
-            xsize 780
+            xsize 820
             ysize 40
             background "#00000066"
             padding (12, 4, 12, 4)
             text "[fret_feedback]" style "guitar_feedback_text"
 
-        ## ── 指板主体 ──
+        ## ── 指板 ──
         frame:
             xalign 0.5
             background "#1a0d05ee"
@@ -225,34 +233,29 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
             vbox:
                 spacing 0
 
-                ## 品格标题行
+                ## 标题行
                 hbox:
                     spacing 0
-                    ## 弦名列占位
                     frame:
                         xysize (36, 24)
                         background "#00000000"
                         text "" size 12 xalign 0.5
-
-                    ## 空弦列标题
                     frame:
                         xysize (52, 24)
                         background "#00000000"
                         text "空弦" style "guitar_note_label"
-
-                    ## 品格号标题
                     for fret_num in [1, 2, 3, 4, 5]:
                         frame:
                             xysize (72, 24)
                             background "#00000000"
                             text "{}品".format(fret_num) style "guitar_note_label"
 
-                ## 6根弦（从1弦到6弦，1弦在上）
+                ## 6根弦
                 for string_num in [1, 2, 3, 4, 5, 6]:
                     hbox:
                         spacing 0
 
-                        ## 弦名标签
+                        ## 弦名
                         frame:
                             xysize (36, 52)
                             background "#0f0804"
@@ -262,61 +265,83 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
                                 xalign 0.5
                                 yalign 0.5
 
-                        ## 空弦按钮（品格0）
+                        ## 空弦按钮
+                        python:
+                            _open_is_target = is_target_open(string_num, target_chord)
+                            _open_note = GUITAR_NOTES.get((string_num, 0), "?")
+                            _open_sound = get_fret_sound(string_num, 0)
                         button:
                             style "open_string_button"
                             selected fret_pressed.get((string_num, 0), False)
                             action [
+                                Play("sound", _open_sound),
                                 SetVariable("fret_pressed", toggle_fret(fret_pressed, string_num, 0)),
-                                SetVariable("fret_feedback", "第{}弦 空弦 → {}".format(
-                                    string_num,
-                                    GUITAR_NOTES.get((string_num, 0), "?")
-                                )),
+                                SetVariable("fret_feedback", "第{}弦 空弦".format(string_num)),
                                 SetVariable("strum_result", ""),
                             ]
-                            text GUITAR_NOTES.get((string_num, 0), "?") style "open_string_button_text"
+                            if _open_is_target:
+                                text "✓" style "open_string_button_text"
+                            else:
+                                text _open_note style "open_string_button_text"
 
-                        ## 品格1-5
+                        ## 品格 1-5
                         for fret_num in [1, 2, 3, 4, 5]:
                             python:
                                 _is_pressed = fret_pressed.get((string_num, fret_num), False)
                                 _note_name = GUITAR_NOTES.get((string_num, fret_num), "?")
+                                _is_target = is_target_fret(string_num, fret_num, target_chord)
+                                _sound_file = get_fret_sound(string_num, fret_num)
                             button:
-                                style "fret_button"
+                                style "fret_button_target" if _is_target else "fret_button"
                                 selected _is_pressed
                                 action [
+                                    Play("sound", _sound_file),
                                     SetVariable("fret_pressed", toggle_fret(fret_pressed, string_num, fret_num)),
-                                    SetVariable("fret_feedback", "第{}弦 {}品 → {}".format(
-                                        string_num, fret_num, _note_name
-                                    )),
+                                    SetVariable("fret_feedback", "第{}弦 {}品".format(string_num, fret_num)),
                                     SetVariable("strum_result", ""),
                                 ]
-                                text _note_name style "fret_button_text"
+                                if _is_target:
+                                    text "●" style "fret_button_target_text"
+                                else:
+                                    text _note_name style "fret_button_text"
 
-        ## ── 扫弦 + 和弦检测区 ──
+        ## ── 提示说明（有目标和弦时显示） ──
+        if target_chord:
+            frame:
+                xalign 0.5
+                xsize 820
+                ysize 36
+                background "#001a0088"
+                padding (12, 4, 12, 4)
+                text "绿色 ● = 需要按的位置  ·  ✓ = 空弦直接拨  ·  按好后点「扫弦」听听看":
+                    size 13
+                    color "#88cc88"
+                    xalign 0.5
+                    yalign 0.5
+
+        ## ── 扫弦 + 操作按钮 ──
         hbox:
             xalign 0.5
             spacing 16
 
-            ## 向下扫弦
             button:
                 style "strum_button"
                 action [
+                    Play("sound", "audio/strum_down.wav"),
                     SetVariable("strum_result", "↓ " + " ".join(get_pressed_notes(fret_pressed))),
-                    SetVariable("fret_feedback", "↓ 扫弦：" + "  ".join(get_pressed_notes(fret_pressed))),
+                    SetVariable("fret_feedback", "↓ 扫弦"),
                 ]
                 text "↓ 扫弦" style "strum_button_text"
 
-            ## 向上扫弦
             button:
                 style "strum_button"
                 action [
-                    SetVariable("strum_result", "↑ " + " ".join(reversed(get_pressed_notes(fret_pressed)))),
-                    SetVariable("fret_feedback", "↑ 扫弦：" + "  ".join(reversed(get_pressed_notes(fret_pressed)))),
+                    Play("sound", "audio/strum_up.wav"),
+                    SetVariable("strum_result", "↑ " + " ".join(list(reversed(get_pressed_notes(fret_pressed))))),
+                    SetVariable("fret_feedback", "↑ 扫弦"),
                 ]
                 text "↑ 扫弦" style "strum_button_text"
 
-            ## 检查和弦（有目标和弦时才显示）
             if target_chord:
                 button:
                     style "strum_button"
@@ -326,53 +351,44 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
                         SetVariable("fret_feedback",
                             check_chord_match(fret_pressed, target_chord)[1]
                         ),
+                        Play("sound",
+                            "audio/chord_correct.wav" if check_chord_match(fret_pressed, target_chord)[0]
+                            else "audio/chord_wrong.wav"
+                        ),
                     ]
-                    text "检查 {} 和弦".format(target_chord) style "strum_button_text"
+                    text "检查手型" style "strum_button_text"
 
-                ## 显示标准手型（提示）
-                button:
-                    style "strum_button"
-                    background "#1a2a1a"
-                    hover_background "#2a4a2a"
-                    action [
-                        SetVariable("fret_pressed", apply_chord_shape(target_chord)),
-                        SetVariable("fret_feedback", "已显示 {} 标准手型，试试扫弦听听效果".format(target_chord)),
-                        SetVariable("strum_result", ""),
-                    ]
-                    text "查看手型提示" style "strum_button_text"
-
-            ## 清空
             button:
                 style "strum_button"
                 background "#2a1a1a"
                 hover_background "#4a2a2a"
                 action [
+                    Play("sound", "audio/chord_wrong.wav"),
                     SetVariable("fret_pressed", {}),
-                    SetVariable("fret_feedback", "清空了所有按弦"),
+                    SetVariable("fret_feedback", "松开了所有弦"),
                     SetVariable("strum_result", ""),
                 ]
-                text "✕ 松开所有弦" style "strum_button_text"
+                text "✕ 松弦" style "strum_button_text"
 
-        ## ── 底部：完成/退出按钮 ──
+        ## ── 完成/退出 ──
         hbox:
             xalign 0.5
             spacing 24
 
             if target_chord:
-                ## 确认完成（要通过检查才能完成）
                 button:
-                    xysize (200, 48)
+                    xysize (220, 48)
                     background "#1a3a1a"
                     hover_background "#2a5a2a"
                     padding (8, 8, 8, 8)
                     sensitive check_chord_match(fret_pressed, target_chord)[0]
                     action [
+                        Play("sound", "audio/chord_correct.wav"),
                         Hide("guitar_fretboard"),
                         Jump(exit_label),
                     ]
                     text "✓ 弹对了，继续" xalign 0.5 yalign 0.5 size 15 color "#88dd88" hover_color "#aaffaa"
 
-            ## 不带目标时的完成按钮
             if not target_chord:
                 button:
                     xysize (200, 48)
@@ -385,7 +401,6 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
                     ]
                     text "完成练习" xalign 0.5 yalign 0.5 size 15 color "#88dd88"
 
-            ## 退出不保存
             button:
                 xysize (160, 48)
                 background "#3a1a1a"
@@ -397,14 +412,14 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
                 ]
                 text "先不练了" xalign 0.5 yalign 0.5 size 15 color "#dd8888"
 
-        ## ── 操作说明 ──
+        ## ── 底部说明 ──
         frame:
             xalign 0.5
-            xsize 780
+            xsize 820
             ysize 34
             background "#00000055"
             padding (12, 4, 12, 4)
-            text "点击格子按弦（再次点击松开）· 同一弦只能按一个品 · 空弦格=不按品格直接拨":
+            text "点击格子按弦发声（再次点击松开）· 同一弦只能按一个品格":
                 size 12
                 color "#555555"
                 xalign 0.5
@@ -412,30 +427,30 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
 
 
 ## ─────────────────────────────────────────────
-## 自由弹奏模式（无任务，随便探索）
+## 自由弹奏
 ## ─────────────────────────────────────────────
 label guitar_free_play:
     $ fret_pressed = {}
-    $ fret_feedback = "点击格子按弦，然后扫弦听听效果"
+    $ fret_feedback = "随便点格子，听听每个音"
     $ strum_result = ""
     show screen guitar_fretboard(
         task_text="🎸 自由弹奏 · 随便探索，没有对错",
         target_chord="",
         exit_label="guitar_room_main"
     )
-    pause  ## 等待 screen 内的 Jump 触发
+    pause
     return
 
 
 ## ─────────────────────────────────────────────
-## 指定和弦练习（带检查）
+## 和弦练习
 ## ─────────────────────────────────────────────
 label guitar_interactive_c:
-    $ fret_pressed = {}
-    $ fret_feedback = "试着按出 C 和弦：食指1弦1品，中指2弦1品，无名指4弦2品，小指5弦3品（可查看手型提示）"
+    $ fret_pressed = apply_chord_shape("C")
+    $ fret_feedback = "绿色的位置就是要按的地方，试着扫一下弦"
     $ strum_result = ""
     show screen guitar_fretboard(
-        task_text="练习 C 和弦 · 按对手型后扫弦，再点「弹对了，继续」",
+        task_text="练习 C 和弦 · 按住绿色位置，扫弦，再「检查手型」",
         target_chord="C",
         exit_label="guitar_c_interactive_done"
     )
@@ -451,8 +466,8 @@ label guitar_c_interactive_done:
 
 
 label guitar_interactive_g:
-    $ fret_pressed = {}
-    $ fret_feedback = "试着按出 G 和弦：中指6弦3品，食指5弦2品，无名指1弦3品（可查看手型提示）"
+    $ fret_pressed = apply_chord_shape("G")
+    $ fret_feedback = "绿色的位置就是要按的地方，试着扫一下弦"
     $ strum_result = ""
     show screen guitar_fretboard(
         task_text="练习 G 和弦 · 手指要撑开，按对后扫弦确认",
@@ -471,8 +486,8 @@ label guitar_g_interactive_done:
 
 
 label guitar_interactive_am:
-    $ fret_pressed = {}
-    $ fret_feedback = "试着按出 Am 和弦：食指2弦1品，中指3弦2品，无名指4弦2品（可查看手型提示）"
+    $ fret_pressed = apply_chord_shape("Am")
+    $ fret_feedback = "绿色的位置就是要按的地方，试着扫一下弦"
     $ strum_result = ""
     show screen guitar_fretboard(
         task_text="练习 Am 和弦 · 有点忧郁感的小调",
@@ -491,11 +506,11 @@ label guitar_am_interactive_done:
 
 
 label guitar_interactive_f:
-    $ fret_pressed = {}
-    $ fret_feedback = "F 和弦最难：食指横按1-6弦1品（封闭），中指3弦2品，无名指4弦3品，小指5弦3品"
+    $ fret_pressed = apply_chord_shape("F")
+    $ fret_feedback = "F 是封闭和弦，6根弦都要按——绿色位置都按住后扫弦"
     $ strum_result = ""
     show screen guitar_fretboard(
-        task_text="练习 F 和弦（封闭和弦）· 最难的一关，可以先看手型提示",
+        task_text="练习 F 和弦（封闭和弦）· 最难的一关",
         target_chord="F",
         exit_label="guitar_f_interactive_done"
     )
@@ -512,7 +527,6 @@ label guitar_f_interactive_done:
     jump guitar_practice_menu
 
 
-## 自由弹奏进入的和弦试弹（用于演奏环节）
 label guitar_interactive_free_song:
     $ fret_pressed = {}
     $ fret_feedback = "按出你想要的和弦，然后扫弦感受一下"
