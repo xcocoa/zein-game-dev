@@ -291,18 +291,27 @@ screen guitar_fretboard(task_text="自由弹奏", target_chord="", exit_label="g
                                 _note_name = GUITAR_NOTES.get((string_num, fret_num), "?")
                                 _is_target = is_target_fret(string_num, fret_num, target_chord)
                                 _sound_file = get_fret_sound(string_num, fret_num)
-                            button:
-                                style "fret_button_target" if _is_target else "fret_button"
-                                selected _is_pressed
-                                action [
-                                    Play("sound", _sound_file),
-                                    SetVariable("fret_pressed", toggle_fret(fret_pressed, string_num, fret_num)),
-                                    SetVariable("fret_feedback", "第{}弦 {}品".format(string_num, fret_num)),
-                                    SetVariable("strum_result", ""),
-                                ]
-                                if _is_target:
+                            if _is_target:
+                                button:
+                                    style "fret_button_target"
+                                    selected _is_pressed
+                                    action [
+                                        Play("sound", _sound_file),
+                                        SetVariable("fret_pressed", toggle_fret(fret_pressed, string_num, fret_num)),
+                                        SetVariable("fret_feedback", "第{}弦 {}品".format(string_num, fret_num)),
+                                        SetVariable("strum_result", ""),
+                                    ]
                                     text "●" style "fret_button_target_text"
-                                else:
+                            else:
+                                button:
+                                    style "fret_button"
+                                    selected _is_pressed
+                                    action [
+                                        Play("sound", _sound_file),
+                                        SetVariable("fret_pressed", toggle_fret(fret_pressed, string_num, fret_num)),
+                                        SetVariable("fret_feedback", "第{}弦 {}品".format(string_num, fret_num)),
+                                        SetVariable("strum_result", ""),
+                                    ]
                                     text _note_name style "fret_button_text"
 
         ## ── 提示说明（有目标和弦时显示） ──
