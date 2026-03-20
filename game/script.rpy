@@ -61,6 +61,9 @@ label world_select:
         "📖  方鸿渐的某个下午 · 1947年上海的亭子间":
             jump world_fanghongjian
 
+        "🎸  学吉他的那段日子 · 一个正在练琴的房间":
+            jump world_guitar
+
         "🌙  〔未解锁〕失眠者的凌晨三点":
             jump world_locked
 
