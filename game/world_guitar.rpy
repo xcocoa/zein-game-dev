@@ -134,16 +134,16 @@ label guitar_practice_menu:
 
     menu:
 
-        "🎸 [交互] 在指板上练 C 和弦" if not guitar_chord_c:
+        "🎸 【交互】 在指板上练 C 和弦" if not guitar_chord_c:
             jump guitar_interactive_c
 
-        "🎸 [交互] 在指板上练 G 和弦" if not guitar_chord_g:
+        "🎸 【交互】 在指板上练 G 和弦" if not guitar_chord_g:
             jump guitar_interactive_g
 
-        "🎸 [交互] 在指板上练 Am 和弦" if not guitar_chord_am:
+        "🎸 【交互】 在指板上练 Am 和弦" if not guitar_chord_am:
             jump guitar_interactive_am
 
-        "🎸 [交互] 在指板上练 F 和弦" if not guitar_chord_f:
+        "🎸 【交互】 在指板上练 F 和弦" if not guitar_chord_f:
             jump guitar_interactive_f
 
         "练扫弦节奏" if guitar_chord_c and guitar_chord_g and not guitar_strumming:
