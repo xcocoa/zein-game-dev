@@ -6,9 +6,6 @@ define config.name = _("世界碎片 · World Fragments")
 ## 是否在主菜单显示标题和版本号
 define gui.show_name = True
 
-## 语言
-define gui.language = "schinese"
-
 ## 版本号
 define config.version = "0.1-demo"
 

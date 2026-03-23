@@ -1,0 +1,212 @@
+2026-03-18 07:14:01 UTC
+Linux-5.4.241-1-tlinux4-0023.4-x86_64-with-glibc2.38
+Ren'Py 8.3.4.24120703
+
+Early init took 0.03s
+Loading error handling took 0.02s
+Loading script took 0.05s
+Loading save slot metadata took 0.00s
+Loading persistent took 0.00s
+Running init code took 0.02s
+Loading analysis data took 0.01s
+Analyze and compile ATL took 0.00s
+Reloading save slot metadata took 0.00s
+Index archives took 0.00s
+Dump and make backups took 0.00s
+Cleaning cache took 0.00s
+Making clean stores took 0.00s
+Initial gc took 0.03s
+DPI scale factor: 1.000000
+Creating interface object took 0.00s
+Cleaning stores took 0.00s
+Init translation took 0.04s
+Build styles took 0.00s
+Load screen analysis took 0.02s
+Analyze screens took 0.00s
+Save screen analysis took 0.00s
+Prepare screens took 0.04s
+Save pyanalysis. took 0.00s
+Save bytecode. took 0.00s
+Running _start took 0.00s
+Audio and video init failed. Proceeding anyway.
+Traceback (most recent call last):
+  File "/tmp/renpy-8.3.4-sdk/renpy/audio/audio.py", line 1048, in init
+    renpysound.init(renpy.config.sound_sample_rate, 2, bufsize, False, renpy.config.equal_mono, renpy.config.linear_fades)
+  File "renpysound.pyx", line 466, in renpy.audio.renpysound.init
+  File "renpysound.pyx", line 111, in renpy.audio.renpysound.check_error
+Exception: NAS: SDL_LoadObject('libaudio.so.2') failed: Failed loading libaudio.so.2: libaudio.so.2: cannot open shared object file: No su
+Interface start took 0.17s
+
+Initializing gl2 renderer:
+primary display bounds: (0, 0, 1280, 720)
+swap interval: 1 frames
+Windowed mode.
+Could not get pygame screen: error('Invalid window')
+
+Initializing gles2 renderer:
+primary display bounds: (0, 0, 1280, 720)
+swap interval: 1 frames
+Windowed mode.
+Could not get pygame screen: error('Invalid window')
+
+Initializing gl renderer:
+primary display bounds: (0, 0, 1280, 720)
+swap interval: 1 frames
+Windowed mode.
+Could not get pygame screen: error('Invalid window')
+
+Initializing gles renderer:
+primary display bounds: (0, 0, 1280, 720)
+swap interval: 1 frames
+Windowed mode.
+Could not get pygame screen: error('Invalid window')
+
+Initializing sw renderer:
+
+Full traceback:
+  File "renpy/common/00start.rpy", line 211, in script call
+    call _gl_test
+  File "renpy/common/00gltest.rpy", line 390, in script
+    $ __gl_test()
+  File "/tmp/renpy-8.3.4-sdk/renpy/ast.py", line 827, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "/tmp/renpy-8.3.4-sdk/renpy/python.py", line 1178, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "renpy/common/00gltest.rpy", line 390, in <module>
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 319, in _m1_00gltest__gl_test
+    _gl_performance_test()
+  File "renpy/common/00gltest.rpy", line 342, in _gl_performance_test
+    ui.interact(suppress_underlay=True, suppress_overlay=True)
+  File "/tmp/renpy-8.3.4-sdk/renpy/ui.py", line 301, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 2172, in interact
+    self.start()
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 1032, in start
+    self.set_mode()
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 1354, in set_mode
+    if draw.init(virtual_size):
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/swdraw.py", line 735, in init
+    self.screen = pygame.display.set_mode((scaled_width, scaled_height), 0, 32)
+  File "src/pygame_sdl2/display.pyx", line 553, in pygame_sdl2.display.set_mode
+  File "src/pygame_sdl2/display.pyx", line 189, in pygame_sdl2.display.Window.__init__
+error: Invalid window
+
+While running game code:
+  File "renpy/common/00start.rpy", line 211, in script call
+    call _gl_test
+  File "renpy/common/00gltest.rpy", line 390, in script
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 390, in <module>
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 319, in _m1_00gltest__gl_test
+    _gl_performance_test()
+  File "renpy/common/00gltest.rpy", line 342, in _gl_performance_test
+    ui.interact(suppress_underlay=True, suppress_overlay=True)
+error: Invalid window
+
+Full traceback:
+  File "/tmp/renpy-8.3.4-sdk/renpy/bootstrap.py", line 359, in bootstrap
+    renpy.main.main()
+  File "/tmp/renpy-8.3.4-sdk/renpy/main.py", line 652, in main
+    run(restart)
+  File "/tmp/renpy-8.3.4-sdk/renpy/main.py", line 148, in run
+    renpy.execution.run_context(True)
+  File "/tmp/renpy-8.3.4-sdk/renpy/execution.py", line 958, in run_context
+    context.run()
+  File "renpy/common/00start.rpy", line 211, in script call
+    call _gl_test
+  File "renpy/common/00gltest.rpy", line 390, in script
+    $ __gl_test()
+  File "lib/python3.9/future/utils/__init__.py", line 444, in raise_
+  File "renpy/common/00start.rpy", line 211, in script call
+    call _gl_test
+  File "renpy/common/00gltest.rpy", line 390, in script
+    $ __gl_test()
+  File "/tmp/renpy-8.3.4-sdk/renpy/ast.py", line 827, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "/tmp/renpy-8.3.4-sdk/renpy/python.py", line 1178, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "renpy/common/00gltest.rpy", line 390, in <module>
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 319, in _m1_00gltest__gl_test
+    _gl_performance_test()
+  File "renpy/common/00gltest.rpy", line 342, in _gl_performance_test
+    ui.interact(suppress_underlay=True, suppress_overlay=True)
+  File "/tmp/renpy-8.3.4-sdk/renpy/ui.py", line 301, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 2172, in interact
+    self.start()
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 1032, in start
+    self.set_mode()
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 1354, in set_mode
+    if draw.init(virtual_size):
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/swdraw.py", line 735, in init
+    self.screen = pygame.display.set_mode((scaled_width, scaled_height), 0, 32)
+  File "src/pygame_sdl2/display.pyx", line 553, in pygame_sdl2.display.set_mode
+  File "src/pygame_sdl2/display.pyx", line 189, in pygame_sdl2.display.Window.__init__
+error: Invalid window
+
+While running game code:
+  File "renpy/common/00start.rpy", line 211, in script call
+    call _gl_test
+  File "renpy/common/00gltest.rpy", line 390, in script
+    $ __gl_test()
+  File "renpy/common/00start.rpy", line 211, in script call
+    call _gl_test
+  File "renpy/common/00gltest.rpy", line 390, in script
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 390, in <module>
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 319, in _m1_00gltest__gl_test
+    _gl_performance_test()
+  File "renpy/common/00gltest.rpy", line 342, in _gl_performance_test
+    ui.interact(suppress_underlay=True, suppress_overlay=True)
+error: Invalid window
+Traceback (most recent call last):
+  File "/tmp/renpy-8.3.4-sdk/renpy/bootstrap.py", line 359, in bootstrap
+    renpy.main.main()
+  File "/tmp/renpy-8.3.4-sdk/renpy/main.py", line 652, in main
+    run(restart)
+  File "/tmp/renpy-8.3.4-sdk/renpy/main.py", line 148, in run
+    renpy.execution.run_context(True)
+  File "/tmp/renpy-8.3.4-sdk/renpy/execution.py", line 958, in run_context
+    context.run()
+  File "/tmp/renpy-8.3.4-sdk/renpy/execution.py", line 634, in run
+    reraise(exc_info[0], exc_info[1], exc_info[2])
+  File "lib/python3.9/future/utils/__init__.py", line 444, in raise_
+  File "/tmp/renpy-8.3.4-sdk/renpy/execution.py", line 599, in run
+    node.execute()
+  File "/tmp/renpy-8.3.4-sdk/renpy/ast.py", line 827, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "/tmp/renpy-8.3.4-sdk/renpy/python.py", line 1178, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "renpy/common/00gltest.rpy", line 390, in <module>
+    $ __gl_test()
+  File "renpy/common/00gltest.rpy", line 319, in _m1_00gltest__gl_test
+    _gl_performance_test()
+  File "renpy/common/00gltest.rpy", line 342, in _gl_performance_test
+    ui.interact(suppress_underlay=True, suppress_overlay=True)
+  File "/tmp/renpy-8.3.4-sdk/renpy/ui.py", line 301, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 2172, in interact
+    self.start()
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 1032, in start
+    self.set_mode()
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/core.py", line 1354, in set_mode
+    if draw.init(virtual_size):
+  File "/tmp/renpy-8.3.4-sdk/renpy/display/swdraw.py", line 735, in init
+    self.screen = pygame.display.set_mode((scaled_width, scaled_height), 0, 32)
+  File "src/pygame_sdl2/display.pyx", line 553, in pygame_sdl2.display.set_mode
+  File "src/pygame_sdl2/display.pyx", line 189, in pygame_sdl2.display.Window.__init__
+pygame_sdl2.error.error: Invalid window
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/renpy-8.3.4-sdk/renpy/editor.py", line 107, in open
+    subprocess.call([ "xdg-open", filename ])
+  File "lib/python3.9/subprocess.py", line 349, in call
+  File "lib/python3.9/subprocess.py", line 951, in __init__
+  File "lib/python3.9/subprocess.py", line 1821, in _execute_child
+FileNotFoundError: [Errno 2] No such file or directory: 'xdg-open'

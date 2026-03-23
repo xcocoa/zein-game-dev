@@ -58,10 +58,13 @@ label world_select:
         "📷  林晓的周五下午 · 一个摄影学生的房间":
             jump world_linxiao
 
-        "📖  [未解锁] 来自陌生城市的流水账":
-            jump world_locked
+        "📖  方鸿渐的某个下午 · 1947年上海的亭子间":
+            jump world_fanghongjian
 
-        "🌙  [未解锁] 失眠者的凌晨三点":
+        "🎸  学吉他的那段日子 · 一个正在练琴的房间":
+            jump world_guitar
+
+        "🌙  〔未解锁〕失眠者的凌晨三点":
             jump world_locked
 
         "← 什么都不想看，离开":

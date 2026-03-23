@@ -1,0 +1,24 @@
+[project]
+name = "storyforge"
+version = "0.1.0"
+description = "将中文小说/创意故事自动转换为可运行的 Ren'Py 游戏脚本"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "httpx>=0.25",
+    "typer>=0.9",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+]
+
+[project.scripts]
+storyforge = "storyforge.cli:app"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
